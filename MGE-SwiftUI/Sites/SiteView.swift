@@ -13,6 +13,7 @@
 import SwiftUI
 
 struct SiteView: View {
+    @Namespace private var siteNS
     @StateObject var viewModel = SiteViewModel()
     @State private var showExtended = false
     @State private var showImage = false
@@ -21,14 +22,14 @@ struct SiteView: View {
         NavigationStack {
             VStack(alignment: .leading) {
                 if !showExtended {
-                    HeaderView(site: viewModel.site)
+                    HeaderView(siteNS: siteNS, site: viewModel.site)
                         .onTapGesture {
                             withAnimation {
                                 showExtended.toggle()
                             }
                         }
                 } else {
-                    ExtendedHeaderView(site: viewModel.site)
+                    ExtendedHeaderView(siteNS: siteNS, site: viewModel.site)
                         .onTapGesture {
                             withAnimation {
                                 showExtended.toggle()

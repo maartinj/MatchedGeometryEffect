@@ -12,6 +12,7 @@
 import SwiftUI
 
 struct HeaderView: View {
+    let siteNS: Namespace.ID
     var site: Site
     var body: some View {
         VStack(alignment: .leading) {
@@ -19,6 +20,7 @@ struct HeaderView: View {
                 Image(site.imageName)
                     .resizable()
                     .scaledToFill()
+                    .matchedGeometryEffect(id: "image", in: siteNS)
                     .frame(width: 100, height: 100)
                     .clipped()
                 VStack {
@@ -28,6 +30,7 @@ struct HeaderView: View {
                         .lineLimit(1)
                     Text(site.tagLine).italic()
                 }
+                .matchedGeometryEffect(id: "text", in: siteNS)
             }
         }
         .padding()
@@ -35,8 +38,9 @@ struct HeaderView: View {
 }
 
 struct HeaderView_Previews: PreviewProvider {
+    @Namespace static var siteNS
     static var sample = Site.sample
     static var previews: some View {
-        HeaderView(site: sample)
+        HeaderView(siteNS: siteNS, site: sample)
     }
 }
