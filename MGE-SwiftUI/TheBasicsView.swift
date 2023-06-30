@@ -9,17 +9,36 @@
 // Subscribe on YouTube: https://youTube.com/@StewartLynch
 // Buy me a ko-fi:  https://ko-fi.com/StewartLynch
 
+// Link: https://www.youtube.com/watch?v=xGNR7tvDE0Q&ab_channel=StewartLynch
+
 
 import SwiftUI
 
 struct TheBasicsView: View {
+    @Namespace private var basicNS
+    @State private var move = false
     var body: some View {
         VStack {
             HStack {
                 Rectangle().fill(.blue)
+                    .matchedGeometryEffect(id: "basic",
+                                           in: basicNS,
+                                           properties: .frame,
+                                           anchor: .bottomLeading,
+                                           isSource: true)
                     .frame(width: 150, height: 100)
                 Rectangle().fill(.green.opacity(0.6))
+                    .matchedGeometryEffect(id: move ? "basic" : "",
+                                           in: basicNS,
+                                           properties: .position,
+                                           anchor: .topLeading,
+                                           isSource: false)
                     .frame(width: 100, height: 50)
+            }
+            Button("Move") {
+                withAnimation {
+                    move.toggle()
+                }
             }
         }
     }
