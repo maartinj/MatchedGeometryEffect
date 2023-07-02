@@ -14,14 +14,22 @@ import Foundation
 
 class SiteViewModel: ObservableObject {
     @Published var site: Site = Site.sample
+    @Published var selectedIndex = 0
     
     @Published var selectedImage: String? = nil
     
     func selectImage(_ image: String) {
+        if let index = site.unSplashImages.firstIndex(where: {$0 == image}) {
+            selectedIndex = index
+            site.unSplashImages.remove(at: index)
             selectedImage = image
+        }
     }
     
     func unselectImage() {
+        if let selectedImage {
             self.selectedImage = nil
+            site.unSplashImages.insert(selectedImage, at: selectedIndex)
+        }
     }
 }

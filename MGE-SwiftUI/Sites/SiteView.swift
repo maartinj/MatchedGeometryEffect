@@ -20,42 +20,46 @@ struct SiteView: View {
     let columns = Array(repeating: GridItem(.flexible()), count: 4)
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading) {
-                if !showExtended {
-                    HeaderView(siteNS: siteNS, site: viewModel.site)
-                        .onTapGesture {
-                            withAnimation {
-                                showExtended.toggle()
-                            }
-                        }
-                } else {
-                    ExtendedHeaderView(siteNS: siteNS, site: viewModel.site)
-                        .onTapGesture {
-                            withAnimation {
-                                showExtended.toggle()
-                            }
-                        }
-                }
-                ScrollView() {
-                    Text("Photo Gallery")
-                    LazyVGrid(columns: columns) {
-                        ForEach(viewModel.site.unSplashImages, id: \.self) { image in
-                            Image(image)
-                                .resizable()
-                                .scaledToFit()
-                                .onTapGesture {
-                                    withAnimation(.spring(dampingFraction: 0.6)) {
-                                        viewModel.selectImage(image)
-                                        showImage.toggle()
-                                    }
+            ZStack {
+                VStack(alignment: .leading) {
+                    if !showExtended {
+                        HeaderView(siteNS: siteNS, site: viewModel.site)
+                            .onTapGesture {
+                                withAnimation {
+                                    showExtended.toggle()
                                 }
-                        }
+                            }
+                    } else {
+                        ExtendedHeaderView(siteNS: siteNS, site: viewModel.site)
+                            .onTapGesture {
+                                withAnimation {
+                                    showExtended.toggle()
+                                }
+                            }
                     }
-                    .padding()
+                    ScrollView() {
+                        Text("Photo Gallery")
+                        LazyVGrid(columns: columns) {
+                            ForEach(viewModel.site.unSplashImages, id: \.self) { image in
+                                Image(image)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .matchedGeometryEffect(id: image, in: siteNS)
+                                    .onTapGesture {
+                                        withAnimation(.spring(dampingFraction: 0.6)) {
+                                            viewModel.selectImage(image)
+                                            showImage.toggle()
+                                        }
+                                    }
+                            }
+                        }
+                        .padding()
+                    }
+                    .opacity(viewModel.selectedImage == nil ? 1 : 0)
                 }
-            }
-            .sheet(isPresented: $showImage) {
-                SelectedImageView(viewModel: viewModel)
+                if viewModel.selectedImage != nil {
+                    SelectedImageView(siteNS: siteNS, viewModel: viewModel)
+                }
             }
             .navigationTitle("National Parks")
         }

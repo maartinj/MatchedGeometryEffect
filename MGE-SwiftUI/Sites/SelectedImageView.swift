@@ -12,7 +12,7 @@
 import SwiftUI
 
 struct SelectedImageView: View  {
-    @Environment(\.dismiss) var dismiss
+    let siteNS: Namespace.ID
     @ObservedObject var viewModel: SiteViewModel
     var body: some View {
         VStack {
@@ -26,9 +26,11 @@ struct SelectedImageView: View  {
                         .padding()
                         .background(Color.black.opacity(0.2))
                 }
+                .matchedGeometryEffect(id: selectedImage, in: siteNS)
                 .onTapGesture {
-                    viewModel.unselectImage()
-                    dismiss()
+                    withAnimation(.spring(dampingFraction: 0.6)){
+                        viewModel.unselectImage()
+                    }
                 }
         }
         .padding()
@@ -39,7 +41,8 @@ struct SelectedImageView: View  {
 }
 
 struct SelectedImageView_Previews: PreviewProvider {
+    @Namespace static var siteNS
     static var previews: some View {
-        SelectedImageView(viewModel: SiteViewModel())
+        SelectedImageView(siteNS: siteNS, viewModel: SiteViewModel())
     }
 }
